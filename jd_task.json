@@ -565,13 +565,13 @@
       }
     },
     {
-      "name": "汪汪乐园开工位",
+      "name": "汪汪乐园合成joy",
       "type": "cron",
-      "time": "50 7 * * *",
+      "time": "25 5-23/3 * * *",
       "running": true,
       "job": {
         "type": "runjs",
-        "target": "https://gitee.com/zero205/JD_tencent_scf/raw/main/jd_joy_park_open.js"
+        "target": "https://gitee.com/zero205/JD_tencent_scf/raw/main/jd_joy_park.js"
       }
     },
     {
