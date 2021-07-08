@@ -1,4 +1,4 @@
-name: 2部署到腾讯云函数1
+name: 2部署到腾讯云函数
 on:
   workflow_dispatch:
   schedule:
@@ -18,6 +18,7 @@ jobs:
       JD_USER_AGENT: ${{ secrets.JD_USER_AGENT}}
       TENCENTSCF_SOURCE_TYPE: ${{ secrets.TENCENTSCF_SOURCE_TYPE}}
       TENCENTSCF_SOURCE_URL: ${{ secrets.TENCENTSCF_SOURCE_URL}}
+      TENCENTSCF_MEMORYSIZE: ${{ secrets.TENCENTSCF_MEMORYSIZE}}
       PUSH_KEY: ${{ secrets.PUSH_KEY}}
       BARK_PUSH: ${{ secrets.BARK_PUSH}}
       BARK_SOUND: ${{ secrets.BARK_SOUND}}
@@ -192,7 +193,6 @@ jobs:
       - name: "安装依赖"
         run: |
           npm install
-          npm install canvas
           npm install tencentcloud-sdk-nodejs
 
       - name: "部署到腾讯云函数"
