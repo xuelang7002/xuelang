@@ -28,7 +28,7 @@ inputs:
           name: beansign_clublottery_shop_try
           cronExpression: "0 1 0 * * * *"
           enable: true
-          argument: jd_bean_sign&jd_club_lottery&jd_shop&jd_try&jd_sign&jd_summer_movement_card
+          argument: jd_bean_sign&jd_club_lottery&jd_shop&jd_try&jd_sign&jd_summer_movement_card&jd_dpqd
     - timer: #取关京东店铺商品 #京东抽奖机 #京东汽车 #京东秒秒币 #天天提鹅 #领金贴
         parameters:
           name: unsubscribe_lotteryMachine_car_ms_jintie
@@ -61,10 +61,10 @@ inputs:
           argument: jd_daily_egg&jd_qjd&jd_zjb&jd_summer_movement
     - timer: #全民开红包 #东东超市 #京喜财富岛 #京喜牧场 #健康社区收取能量
         parameters:
-          name: cfd_superMarket_jxmc_healthenergy
+          name: cfd_superMarket_cfd_jxmc_healthenergy
           cronExpression: "0 20 0,8,12,19,6-23/3 * * * *"
           enable: true
-          argument: jd_redPacket&jd_superMarket&jd_jxmc&jd_z_health_energy
+          argument: jd_redPacket&jd_superMarket&jd_cfd&jd_jxmc&jd_z_health_energy
     - timer: #宠汪汪 #汪汪乐园 #京享值PK
         parameters:
           name: joy_joypark_pk
@@ -76,7 +76,7 @@ inputs:
           name: beanchange_crazyjoy_rankingList_beanhome_sgmh_jxd
           cronExpression: "0 10 0 * * * *"
           enable: true
-          argument: jd_bean_change&jd_rankingList&jd_bean_home&jd_sgmh&jd_jxd&jd_superBrand&jd_joy_park_task&jd_wxFans
+          argument: jd_bean_change&jd_rankingList&jd_bean_home&jd_sgmh&jd_jxd&jd_superBrand&jd_joy_park_task&jd_wxFans&jd_DrawEntrance
     - timer: #金融养猪 #十元街 #京东快递 #京东赚赚 #点点券 #女装盲盒 #电竞经理 #东东乐园 #柠檬零食街 #早起福利
         parameters:
           name: pigPet_syj_kd_jdzz_nzmh_necklace_nzmh_djjl_ddly_lsj
