@@ -1,12 +1,15 @@
 /*
 种豆得豆 脚本更新地址：https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_plantBean.js
-更新时间：2021-04-9
+更新时间：2021-08-20
 活动入口：京东APP我的-更多工具-种豆得豆
 已支持IOS京东多账号,云端多京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 注：会自动关注任务中的店铺跟商品，介意者勿使用。
 互助码shareCode请先手动运行脚本查看打印可看到
 每个京东账号每天只能帮助3个人。多出的助力码将会助力失败。
+
+// zero205：已添加自己账号内部互助，有剩余助力次数再帮我助力
+
 =====================================Quantumult X=================================
 [task_local]
 1 7-21/2 * * * https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_plantBean.js, tag=种豆得豆, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdzd.png, enabled=true
@@ -45,6 +48,7 @@ let roundList = [];
 let awardState = '';//上期活动的京豆是否收取
 let randomCount = $.isNode() ? 20 : 0;
 let num;
+$.newShareCode = [];
 !(async () => {
   await requireConfig();
   if (!cookiesArr[0]) {
@@ -71,43 +75,18 @@ let num;
       message = '';
       subTitle = '';
       option = {};
-      await shareCodesFormat();
       await jdPlantBean();
       await showMsg();
     }
   }
   for (let j = 0; j < cookiesArr.length; j++) {
-    cookie = cookiesArr[j];
-    $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-    if (jdPlantBeanShareArr && jdPlantBeanShareArr.length) {
-      if ($.isNode() && !process.env.PLANT_BEAN_SHARECODES) {
-        console.log(`\n======开始账号内互助======\n`);
-        for (let item of jdPlantBeanShareArr) {
-          console.log(`账号${$.UserName} 去助力 ${item}`)
-          await helpShare(item);
-          if ($.helpResult && $.helpResult.code === '0') {
-            if ($.helpResult.data.helpShareRes) {
-              if ($.helpResult.data.helpShareRes.state === '1') {
-                console.log(`助力好友${item}成功`)
-                console.log(`${$.helpResult.data.helpShareRes.promptText}\n`);
-              } else if ($.helpResult.data.helpShareRes.state === '2') {
-                console.log('您今日助力的机会已耗尽，已不能再帮助好友助力了\n');
-                break;
-              } else if ($.helpResult.data.helpShareRes.state === '3') {
-                console.log('该好友今日已满9人助力/20瓶营养液,明天再来为Ta助力吧\n')
-              } else if ($.helpResult.data.helpShareRes.state === '4') {
-                console.log(`${$.helpResult.data.helpShareRes.promptText}\n`)
-              } else {
-                console.log(`助力其他情况：${JSON.stringify($.helpResult.data.helpShareRes)}`);
-              }
-            }
-          } else {
-            console.log(`助力好友失败: ${JSON.stringify($.helpResult)}`);
-          }
-        }
-      }
+    if (cookiesArr[j]) {
+      cookie = cookiesArr[j];
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+      $.index = j + 1;
+      await shareCodesFormat();
+      await doHelp()
     }
-    await doHelp()
   }
   if ($.isNode() && allMessage) {
     await notify.sendNotify(`${$.name}`, `${allMessage}`)
@@ -122,6 +101,10 @@ async function jdPlantBean() {
   try {
     console.log(`获取任务及基本信息`)
     await plantBeanIndex();
+    if ($.plantBeanIndexResult.errorCode === 'PB101') {
+      console.log(`\n活动太火爆了，还是去买买买吧！\n`)
+      return
+    }
     for (let i = 0; i < $.plantBeanIndexResult.data.roundList.length; i++) {
       if ($.plantBeanIndexResult.data.roundList[i].roundState === "2") {
         num = i
@@ -144,7 +127,7 @@ async function jdPlantBean() {
       message += `【上期成长值】${roundList[num - 1].growth}\n`;
       await receiveNutrients();//定时领取营养液
       await doTask();//做日常任务
-      await doEgg();
+      // await doEgg();
       await stealFriendWater();
       await doCultureBean();
       await doGetReward();
@@ -427,8 +410,14 @@ function showTaskProcess() {
 }
 //助力好友
 async function doHelp() {
-  for (let plantUuid of newShareCodes) {
-    console.log(`开始助力京东账号${$.index} - ${$.nickName}的好友: ${plantUuid}`);
+  if ($.isNode() && !process.env.PLANT_BEAN_SHARECODES) {
+    console.log(`您未填写助力码变量，开始账号内互助，再帮【zero205】助力`);
+    $.newShareCode = [...(jdPlantBeanShareArr || []), ...(newShareCodes || [])]
+  } else {
+    $.newShareCode = newShareCodes
+  }
+  for (let plantUuid of $.newShareCode) {
+    console.log(`${$.UserName}开始助力: ${plantUuid}`);
     if (!plantUuid) continue;
     if (plantUuid === $.myPlantUuid) {
       console.log(`\n跳过自己的plantUuid\n`)
@@ -594,12 +583,12 @@ async function plantBeanIndex() {
 //格式化助力码
 function shareCodesFormat() {
   return new Promise(async resolve => {
-    // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
+    console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
     newShareCodes = [];
     if ($.shareCodesArr[$.index - 1]) {
       newShareCodes = $.shareCodesArr[$.index - 1].split('@');
     } else {
-      console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
+      // console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
       const tempIndex = $.index > shareCodes.length ? (shareCodes.length - 1) : ($.index - 1);
       newShareCodes = shareCodes[tempIndex].split('@');
     }
