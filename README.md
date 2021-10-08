@@ -1,5 +1,5 @@
 ## 禁止Star/Fork!!
-## 为防止仓库再次被封，请使用腾讯云函数、Docker、elecV2P等方式运行
+## 请勿使用Action运行脚本!
 ## 有条（科学）件（上网）的可以 [点此加入组织](https://t.me/jd_zero_205)  
 
 ## 本仓库部分脚本已加入JDHelloWorld大佬助力池，默认加入助力池互助
@@ -13,7 +13,7 @@
 **建议阅读@hshx123大佬的[教程](https://66ccff.work/teach/jd.html)**
 ### 方式二
 * 有能力用户可以进行尝试,通过任何方法都可以,在空仓库内(保证分支名称为`main`),按需运行一次 https://github.com/Ca11back/doge-template 的action即可
-* 第二种:直接clone一个`scf`或`scf2`分支(名字需要为`main`,clone哪个取决于你要用的部署方式)
+* 第二种:直接clone一个`scf2`分支(名字需要为`main`,clone哪个取决于你要用的部署方式)
 
 ## 自动同步本仓库脚本教程：[点此查看](https://github.com/zero205/JD_tencent_scf/blob/main/backUp/reposync.md)  
 
