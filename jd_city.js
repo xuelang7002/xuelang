@@ -39,7 +39,7 @@ if ($.isNode()) {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-const author_codes = ['HYDlyu6kRAigf4H1V5h_msfWmMNTCnBs2YGmJufdib4gLw','RtGKzb72QAz3eIecFdAy0glJup1hZjasT0O0NqUUqIpETGYUxA'].sort(() => 0.5 - Math.random())
+const author_codes = ['RtGKz--tSFj2K4ObRtw6gwLW33Ti-7DkNkd3M46QWjFxpsyJIA','RtGKzrmkEl6mfoGZRdM61xwhaV6OdNBkb49NTSi32DrJNO17Uw'].sort(() => 0.5 - Math.random())
 const self_code = []
 let pool = []
 !(async () => {
@@ -52,6 +52,10 @@ let pool = []
     console.log(`脚本自动抽奖`)
   } else {
     console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭`)
+  }
+  if (process.env.CT_R != 'false') {
+    cookiesArr = cookiesArr.sort(() => 0.5 - Math.random())
+    console.log('CK顺序打乱!用来随机内部互助!,如需关闭CT_R为false')
   }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
