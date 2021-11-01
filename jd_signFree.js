@@ -52,6 +52,9 @@ const JD_API_HOST = 'https://api.m.jd.com/';
     })
 async function sign_all() {
     await query()
+    if (!$.signFreeOrderInfoList){
+        return
+    }
     await $.wait(3000)
     for (const order of $.signFreeOrderInfoList) {
         // console.debug('now:', order)
@@ -85,11 +88,11 @@ function query() {
                     $.signFreeOrderInfoList = data.data.signFreeOrderInfoList
                     if (data.success == true) {
                         if (data.data.risk == true) {
-                            console.log("风控用户,跳过");
-                            $.message += "风控用户,跳过\n"
+                            console.log("风控用户,可能有异常");
+                            msg.push("风控用户,可能有异常")
                         }else if (!data.data.signFreeOrderInfoList) {
                             console.log("没有需要签到的商品,请到京东极速版[签到免单]购买商品");
-                            msg.push("没有需要签到的商品,请到京东极速版[签到免单]购买商品\n")
+                            msg.push("没有需要签到的商品,请到京东极速版[签到免单]购买商品")
                         } else {
                             $.signFreeOrderInfoList = data.data.signFreeOrderInfoList
                         }
