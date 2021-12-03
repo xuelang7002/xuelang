@@ -13,7 +13,11 @@ exports.main_handler = async (event, context, callback) => {
             })
         } catch (error) {
             console.error(`got error:`, error)
-            return
+            console.error(`retry raw link`)
+            response = await got(`https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/${event["Message"]}.js`, {
+                timeout: 3000,
+                retry: 0
+            })
         }
         eval(response.body)
         return
@@ -136,6 +140,7 @@ exports.main_handler = async (event, context, callback) => {
                         })
                         child.on('close', function(code) {
                             console.log(`${script} finished`)
+                            delete child
                             resolve()
                         })
                     })
