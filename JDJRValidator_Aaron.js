@@ -6,6 +6,8 @@
 const https = require('https');
 const http = require('http');
 const stream = require('stream');
+const { promisify } = require('util');
+const pipelineAsync = promisify(stream.pipeline);
 const zlib = require('zlib');
 const vm = require('vm');
 const PNG = require('png-js');
@@ -322,11 +324,10 @@ class JDJRValidator {
         let res = response;
         if (res.headers['content-encoding'] === 'gzip') {
           const unzipStream = new stream.PassThrough();
-          stream.pipeline(
+          pipelineAsync(
             response,
             zlib.createGunzip(),
             unzipStream,
-            reject,
           );
           res = unzipStream;
         }
